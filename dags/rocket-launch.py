@@ -1,18 +1,17 @@
 import json
 import pathlib
 
-import airflow
-import requests
-
-import requests.exceptions as requests_exceptions
-from airflow import DAG
-from airflow.operators.bash import BashOperator
-from airflow.operators.python import PythonOperator
+# import airflow
+# import requests
+#
+# import requests.exceptions as requests_exceptions
+# from airflow import DAG
+# from airflow.operators.bash import BashOperator
+# from airflow.operators.python import PythonOperator
 
 ROCKET_LAUNCHES_URL = "https://ll.thespacedevs.com/2.0.0/launch/upcoming/"
 JSON_PATH = '/tmp/launches.json'
 TARGET_DIR = '/tmp/images'
-
 
 dag=DAG(
     dag_id="donwload_rocket_launches",
@@ -20,11 +19,12 @@ dag=DAG(
     schedule_interval=None,
 )
 
+
 download_launches = BashOperator(
         task_id='download_launches',
-        bash_command=f'curl -o {JSON_PATH} -L {ROCKET_LAUNCHES_URL}'
+        bash_command=f'curl -o {JSON_PATH} -L {ROCKET_LAUNCHES_URL}',
+        dag=dag,
 )
-
 
 def _get_pictures():
     # Path() : Path 객체 생성
