@@ -5,6 +5,7 @@ import airflow
 import requests
 
 import requests.exceptions as requests_exceptions
+
 from airflow import DAG
 from airflow.operators.bash import BashOperator
 from airflow.operators.python import PythonOperator
@@ -64,7 +65,7 @@ download_launches = BashOperator(
 #
 notify = BashOperator(
     task_id="notify",
-    bash_command='echo "There are now $(cat /opt/airflow/tmp/launches.json)"',
+    bash_command='echo "Hello World"',
     dag=dag,
 )
 
