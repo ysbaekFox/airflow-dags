@@ -15,7 +15,7 @@ TARGET_DIR = '/tmp/images'
 
 
 dag=DAG(
-    dag_id="donwload_rocket_laaunches",
+    dag_id="donwload_rocket_launches",
     start_date=airflow.utils.dates.days_ago(14),
     schedule_interval=None,
 )
