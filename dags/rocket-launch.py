@@ -11,8 +11,8 @@ from airflow.operators.bash import BashOperator
 from airflow.operators.python import PythonOperator
 
 ROCKET_LAUNCHES_URL = "https://ll.thespacedevs.com/2.0.0/launch/upcoming/"
-JSON_PATH = '/opt/airflow/tmp/launches.json'
-TARGET_DIR = '/opt/airflow/tmp/images'
+JSON_PATH = '/tmp/launches.json'
+TARGET_DIR = '/tmp/images'
 
 dag=DAG(
     dag_id="donwload_rocket_launches",
