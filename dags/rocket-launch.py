@@ -22,7 +22,7 @@ dag=DAG(
 
 download_launches = BashOperator(
         task_id='download_launches',
-        bash_command="curl -o /opt/airflow/tmp/launches.json -L 'https://ll.thespacedevs.com/2.0.0/launch/upcoming/'",
+        bash_command="curl -o /tmp/launches.json -L 'https://ll.thespacedevs.com/2.0.0/launch/upcoming/'",
         dag=dag,
 )
 
