@@ -62,11 +62,11 @@ download_launches = BashOperator(
 #     dag=dag
 # )
 #
-# notify = BashOperator(
-#     task_id="notify",
-#     bash_command='echo "There are now $(ls /tmp/images/ | wc -l) images"',
-#     dag=dag,
-# )
+notify = BashOperator(
+    task_id="notify",
+    bash_command='echo "There are now $(cat /opt/airflow/tmp/launches.json)"',
+    dag=dag,
+)
 
 
-download_launches
+download_launches >> notify
