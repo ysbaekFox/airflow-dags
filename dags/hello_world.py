@@ -1,21 +1,42 @@
+import pendulum
 from datetime import datetime
 from airflow import DAG
 from airflow.operators.dummy_operator import DummyOperator
 from airflow.operators.python_operator import PythonOperator
-from airflow.operators import MultiplyBy5Operator
 
+# timezone 한국시간으로 변경
+kst = pendulum.timezone("Asia/Seoul")
+
+# 기본 args 생성
+default_args = {
+    'owner' : 'Hello World',
+    'email' : ['airflow@airflow.com'],
+    'email_on_failure': False,
+}
+
+# DAG 생성 
+# 2022/06/21 @once 한번만 실행하는 DAG생성
+with DAG(
+    dag_id='ex_hello_world',
+    default_args=default_args,
+    start_date=datetime(2022, 6,21, tzinfo=kst),
+    description='print hello world',
+    schedule_interval='@once',
+    tags=['test']
+) as dag:
+
+# python Operator에서 사용할 함수 정의
 def print_hello():
- return 'Hello Wolrd'
+    print('hello world')
 
-dag = DAG('hello_world', description='Hello world example', schedule_interval='0 12 * * *', start_date=datetime(2017, 3, 20), catchup=False)
+t1 = DummyOperator(
+    task_id='dummy_task_id',
+    retries=5,
+)
 
-dummy_operator = DummyOperator(task_id='dummy_task', retries = 3, dag=dag)
+t2 = PythonOperator(
+    task_id='Hello_World',
+    python_callable=print_hello
+)
 
-hello_operator = PythonOperator(task_id='hello_task', python_callable=print_hello, dag=dag)
-
-multiplyby5_operator = MultiplyBy5Operator(my_operator_param='my_operator_param',
-                                task_id='multiplyby5_task', dag=dag)
-
-dummy_operator >> hello_operator
-
-dummy_operator >> multiplyby5_operator
+t1 >> t2
