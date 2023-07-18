@@ -40,7 +40,7 @@ def _get_pictures():
             try:
                 response = requests.get(image_url)
                 image_filename = image_url.split('/')[-1]
-                target_file = f'"/tmp/images"/{image_filename}'
+                target_file = f"/tmp/images/{image_filename}"
 
                 with open(target_file, 'wb') as f:
                     f.write(response.content)
