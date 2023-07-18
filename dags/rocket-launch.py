@@ -10,10 +10,6 @@ from airflow import DAG
 from airflow.operators.bash import BashOperator
 from airflow.operators.python import PythonOperator
 
-ROCKET_LAUNCHES_URL = "https://ll.thespacedevs.com/2.0.0/launch/upcoming/"
-JSON_PATH = '/tmp/launches.json'
-TARGET_DIR = '/tmp/images'
-
 dag=DAG(
     dag_id="donwload_rocket_launches",
     start_date=airflow.utils.dates.days_ago(14),
@@ -22,17 +18,17 @@ dag=DAG(
 
 download_launches = BashOperator(
         task_id='download_launches',
-        bash_command="curl -o /tmp/launches.json -L 'https://ll.thespacedevs.com/2.0.0/launch/upcoming/'",
+        bash_command="curl -o /opt/airflow/share/launches.json -L 'https://ll.thespacedevs.com/2.0.0/launch/upcoming/'",
         dag=dag,
 )
 
 def _get_pictures():
     # Path() : Path 객체 생성
     # mkdir() - exist_ok=True : 폴더가 없을 경우 자동으로 생성
-    pathlib.Path("/tmp/images").mkdir(parents=True, exist_ok=True)
+    pathlib.Path("/opt/airflow/share/images").mkdir(parents=True, exist_ok=True)
 
     # launches.json 파일에 있는 모든 그림 파일 download
-    with open("/tmp/launches.json") as f:
+    with open("/opt/airflow/share/launches.json") as f:
         launches = json.load(f)
         image_urls = [launch['image'] for launch in launches['results']]
 
@@ -40,7 +36,7 @@ def _get_pictures():
             try:
                 response = requests.get(image_url)
                 image_filename = image_url.split('/')[-1]
-                target_file = f"/tmp/images/{image_filename}"
+                target_file = f"/opt/airflow/share/images/{image_filename}"
 
                 with open(target_file, 'wb') as f:
                     f.write(response.content)
